@@ -19,7 +19,6 @@ jobs:
     timeout-minutes: 15
     env:
       DOCS_BASE: /workflow-bench/
-      BENCH_WORK: ${{ runner.temp }}/workflow-bench-public
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -29,6 +28,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify
+        env:
+          BENCH_WORK: ${{ runner.temp }}/workflow-bench-public
       - name: Upload site
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
