@@ -19,6 +19,8 @@ description: 'Architecture and provenance in Workflow Bench.'
 
 The root uses strict TypeScript and Effect Schema at persisted-data boundaries. Effect coordinates CLI operations and scoped plan-lock release. The local adapter creates and removes temporary macOS workspaces. Docker adapters use explicit cleanup for containers and networks. Vue owns simple viewer state.
 
+`apps/cli/commands.ts` declares the command tree with `effect/unstable/cli`. Flags define command-specific inputs, validation, defaults, and generated help. Handlers call the runner in `packages` through the existing Effect and Promise APIs. `apps/cli/main.ts` supplies `NodeServices.layer` and handles the CLI exit status. It uses `Effect.runPromise` so the existing run-command signal handlers can await graceful cancellation and evidence retention without a second runtime signal handler interrupting them.
+
 The installed Effect release is pinned. Its source uses `Schema.TaggedError` and `Config.String`; these differ from some earlier v4 examples. Follow the installed package rather than copying old snippets.
 
 ## Inspiration, not a Supabase fork

@@ -3,7 +3,9 @@ title: 'CLI commands'
 description: 'Commands, selection options, and model-call boundaries.'
 ---
 
-Run commands from the repository root as `pnpm bench COMMAND`. Unless a command accepts `--plan`, selection options choose tasks, experiments, and repetitions.
+Run commands from the repository root as `pnpm bench COMMAND`. Run `pnpm bench --help` for the command list or append `--help` to a command for its accepted arguments and options. For example, `pnpm bench plan --help` shows planning options and `pnpm bench cache prune --help` describes cache deletion. `pnpm bench help` also shows the command list. `pnpm bench --version` prints the CLI version.
+
+Effect CLI generates help from the typed command definitions. Each command accepts only its declared options. Invalid values, unknown options, and missing required arguments fail before the command starts. `--work PATH` is shared by all commands and can appear before or after the command name.
 
 | Command              | Model calls? | Purpose                                                        |
 | -------------------- | ------------ | -------------------------------------------------------------- |
@@ -42,7 +44,9 @@ Run commands from the repository root as `pnpm bench COMMAND`. Unless a command 
 | `--cell id,id`            | Select eligible cells when creating a retry plan         |
 | `--output PATH`           | Select a new JSON path for `benchmark`                   |
 
-The default selection is the receipt task with `plain-sol` and `pstack-sol`, one repetition. The default backend is `local`, which requires macOS. Planning requires tasks qualified with the same backend and environment identity. A frozen plan selects its backend for `run`; `run` has no `--backend` option.
+`prepare` and `qualify` accept task and suite selection. `plan` also accepts experiment selection, repetitions, and a shuffle seed. The default plan selection is the receipt task with `plain-sol` and `pstack-sol`, one repetition, and seed `42`. Explicit selection options override suite values. Task and experiment lists use comma-separated IDs.
+
+The default backend is `local`, which requires macOS. Planning requires tasks qualified with the same backend and environment identity. A frozen plan selects its backend for `run`; `run` has no `--backend` option. `run`, `report`, `judge`, `status`, `cancel`, and `retry` require `--plan PATH`.
 
 ## Freeze model settings from the CLI
 

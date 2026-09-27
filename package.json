@@ -32,6 +32,7 @@
     "test:performance": "tsx scripts/performance-proof.ts"
   },
   "dependencies": {
+    "@effect/platform-node": "4.0.0-rc.117",
     "effect": "4.0.0-rc.117"
   },
   "devDependencies": {
