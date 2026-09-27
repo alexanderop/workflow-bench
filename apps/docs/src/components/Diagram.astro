@@ -1,0 +1,68 @@
+---
+import { withBase } from '../lib/links'
+interface Props {
+  src: string
+  alt: string
+  caption: string
+}
+const { src, alt, caption } = Astro.props
+const diagrams = import.meta.glob<string>('../../public/diagrams/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+})
+const markup = diagrams[`../../public${src}`]
+if (!markup) throw new Error(`Unknown diagram ${src}`)
+---
+
+<figure class="doc-diagram">
+  <a href={withBase(src)} aria-label={`Open full-size diagram. ${alt}`}>
+    <div class="diagram-image" set:html={markup} />
+    <span class="enlarge" aria-hidden="true">
+      Open full-size diagram ↗
+    </span>
+  </a>
+  <figcaption>{caption}</figcaption>
+</figure>
+<style>
+  .doc-diagram {
+    margin: 2rem 0;
+  }
+  a {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.65rem;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+  }
+  .diagram-image {
+    overflow-x: auto;
+  }
+  .diagram-image :global(svg) {
+    display: block;
+    width: 100%;
+    min-width: 36rem;
+    height: auto;
+  }
+  .enlarge {
+    display: block;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+    font-size: 0.75rem;
+    text-align: right;
+  }
+  a:hover .enlarge {
+    color: var(--sl-color-white);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 4px;
+  }
+  figcaption {
+    margin-top: 0.75rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+</style>

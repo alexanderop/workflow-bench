@@ -1,0 +1,28 @@
+{
+  "id": "receipt-rounding",
+  "title": "Round receipt lines before summing",
+  "project": "Teaching fixture",
+  "provenance": "Authored for Workflow Bench. Educational plumbing task; not evidence of general workflow quality.",
+  "source": {
+    "kind": "local",
+    "path": "source"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.28.2",
+  "install": [],
+  "checks": [
+    {
+      "name": "Line rounding regression",
+      "command": ["node", "--test", "/tmp/grader/regression.test.mjs"],
+      "regression": true
+    },
+    {
+      "name": "Existing receipt behavior",
+      "command": ["node", "--test", "test/basic.test.mjs"],
+      "regression": false
+    }
+  ],
+  "expectedFailure": "LINE_ROUNDING_REGRESSION",
+  "allowedPaths": ["src/receipt.mjs"],
+  "timeoutSeconds": 30
+}

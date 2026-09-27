@@ -1,0 +1,49 @@
+{
+  "id": "reka-dismissable-touch",
+  "title": "A DismissableLayer that remains mounted with present=false can immediately dismiss itself on the touch interaction that opens it",
+  "project": "Reka UI",
+  "provenance": "Historical regression replay from unovue/reka-ui PR #2863 (https://github.com/unovue/reka-ui/pull/2863). Accepted fix 099dab9944314698122f54bcd0079dd52d0323e0. Shared earlier baseline 719d59af17978eb1e1fe547256501ac960e1a1a4; component source is unchanged between this baseline and the fix parent. MIT. Reference and regression patches are upstream-authored and independently executed here; not claimed to be independently authored.",
+  "source": {
+    "kind": "git",
+    "repository": "https://github.com/unovue/reka-ui.git",
+    "revision": "719d59af17978eb1e1fe547256501ac960e1a1a4"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.13.1",
+  "install": [
+    ["pnpm", "--filter", "./packages/core...", "install", "--frozen-lockfile"]
+  ],
+  "checks": [
+    {
+      "name": "DismissableLayer regression and neighboring behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/DismissableLayer/DismissableLayer.test.ts"
+      ],
+      "regression": true
+    },
+    {
+      "name": "DismissableLayer existing behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/DismissableLayer/DismissableLayer.test.ts",
+        "-t",
+        "should emit escapeKeyDown and dismiss on Escape once present"
+      ],
+      "regression": false
+    }
+  ],
+  "expectedFailure": "should not dismiss on the tap that made it present[\\s\\S]*AssertionError",
+  "allowedPaths": ["packages/core/src/DismissableLayer/DismissableLayer.vue"],
+  "timeoutSeconds": 180
+}

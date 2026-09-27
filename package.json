@@ -1,0 +1,46 @@
+{
+  "name": "workflow-bench",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.2",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "bench": "tsx apps/cli/main.ts",
+    "dev": "pnpm --dir apps/docs dev",
+    "build": "pnpm --dir apps/docs build",
+    "preview": "pnpm --dir apps/docs exec astro preview --host 127.0.0.1 --port 4367",
+    "check": "tsc --noEmit && pnpm --dir apps/docs check",
+    "test": "vitest run",
+    "lint": "oxlint --deny-warnings packages apps/cli tests",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "verify": "pnpm check && pnpm lint && pnpm test && pnpm build && pnpm test:docs",
+    "test:docker": "tsx scripts/docker-proof.ts",
+    "test:local": "tsx scripts/local-proof.ts",
+    "test:native-browser": "tsx scripts/native-browser-proof.ts",
+    "test:workflows": "tsx scripts/workflow-proof.ts",
+    "test:runner": "tsx scripts/runner-proof.ts",
+    "test:upstream": "tsx scripts/upstream-proof.ts",
+    "test:reka": "tsx scripts/reka-proof.ts",
+    "report:expanded": "tsx scripts/expansion-report.ts",
+    "test:workout": "tsx scripts/workout-proof.ts",
+    "test:judge": "tsx scripts/judge-proof.ts",
+    "test:docs": "tsx scripts/docs-proof.ts",
+    "test:performance": "tsx scripts/performance-proof.ts"
+  },
+  "dependencies": {
+    "effect": "4.0.0-rc.117"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "oxlint": "^1.83.0",
+    "prettier": "^3.9.8",
+    "prettier-plugin-astro": "^1.0.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.2"
+  }
+}

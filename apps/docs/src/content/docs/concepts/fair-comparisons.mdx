@@ -1,0 +1,52 @@
+---
+title: 'What makes a fair comparison?'
+description: 'Hold the task and runtime conditions fixed while changing the workflow.'
+---
+
+import Diagram from '../../../components/Diagram.astro'
+
+A controlled workflow comparison changes the selected workflow while keeping the task and runtime conditions equal. That makes a difference in completion interpretable as evidence about the workflow under those conditions.
+
+<Diagram
+  src="/diagrams/controlled-comparison.svg"
+  alt="The same task, model, tools, and limits feed plain Codex and Codex with a workflow. Independent checks grade both arms before paired outcomes are compared across tasks."
+  caption="Change the workflow while holding the experimental conditions fixed. Both arms can use the same tools, including delegation."
+/>
+
+For the teaching-only receipt fixture, one arm might use plain Codex and the other a workflow with review instructions. Both must receive the same rounding requirement, prepared environment, tools, model, and limits. Giving only the workflow arm child agents would change two things at once.
+
+## Change one treatment
+
+For the first study, keep the task, root and child model, CLI version, reasoning effort, available tools, thread and depth limits, time budget, and grading rules equal. Change only the selected workflow.
+
+Plain Codex can delegate using the same tools. The experiment compares workflow instructions with equal access to capabilities.
+
+Personal pstack model preferences are not imported. The controlled pstack adapter writes the experiment model into every role, with two entries per panel. A study of practical defaults with mixed models asks a different question and needs a separate plan.
+
+## Equal time does not mean equal compute
+
+Parallel agents can consume more tokens in the same wall time. Compare elapsed solve time with root usage and observed child usage. If the runtime cannot establish a complete child total, child usage is unknown, not zero.
+
+The runner does not enforce a total-token ceiling. These experiments have equal time limits, but they do not match total compute. A workflow that finishes sooner can still consume more tokens.
+
+## Use repeated attempts and independent tasks
+
+Repeating the receipt task measures variability on that rounding bug. Three attempts do not create three independent bugs. The fixture is useful for a pilot, not a conclusion about general workflow quality.
+
+Select a balanced corpus before inspecting which workflow wins. Include small edits, lifecycle bugs, asynchronous behavior, and changes spanning multiple files. Small tasks expose workflow overhead. Larger tasks give planning and review more opportunities to help.
+
+The seeded execution order interleaves conditions reproducibly. Model aliases and service behavior can still drift over time, so record dates and keep incompatible configurations separate.
+
+## Freeze the decision rule before the study
+
+A result needs a decision rule established before the results are visible. Record the primary outcome, acceptable overhead, task inclusion rules, missing-run policy, and minimum useful improvement.
+
+Development tasks help you fix the runner and tune workflows. Separate held-out tasks provide the final comparison. Tuning a workflow against the final tasks makes those tasks part of development.
+
+## Be explicit about interaction
+
+This release evaluates fully specified autonomous tasks. Every arm receives the same instruction to proceed without human replies. That condition changes workflows that normally ask for design approval, so label the results as autonomous evaluations.
+
+Interactive stakeholder simulation is not implemented yet. A result here does not establish how the same workflow performs with human feedback.
+
+[Interpret results](/concepts/interpretation/) explains paired differences, excluded attempts, and the limits of small samples. [Configure workflows](/guides/workflows/) describes the available adapters.

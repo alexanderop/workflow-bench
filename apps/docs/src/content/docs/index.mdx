@@ -1,0 +1,105 @@
+---
+title: Measure the workflow. Verify the outcome.
+description: A local field guide and lab for comparing agentic coding workflows.
+template: splash
+hero:
+  title: Measure the workflow. <span class="accent-title">Verify the outcome.</span>
+  tagline: Does planning, delegation, or review improve the code? Run controlled experiments and inspect independent tests. Understand what your results can tell you.
+  actions:
+    - text: Qualify your first task
+      link: ./start/quickstart/
+      icon: right-arrow
+    - text: Open the local lab
+      link: ./results/
+      variant: secondary
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+<p class="landing-kicker">CONTROLLED EXPERIMENTS FOR CODING AGENTS</p>
+
+<div class="landing-intro">
+  Hold the task, model, tools, and limits steady.{' '}
+  <strong>Change the workflow.</strong>
+  Then let independent tests decide what worked.
+</div>
+
+<CardGrid>
+  <Card title="A fair comparison" icon="puzzle">
+    Keep the model, task, tools, and limits equal. Change the workflow. Every
+    planned attempt stays visible.
+  </Card>
+  <Card title="An independent answer" icon="approve-check">
+    The agent writes a patch. A fresh grading workspace runs trusted behavioral
+    checks offline. Process compliance earns no correctness points.
+  </Card>
+  <Card title="A local learning lab" icon="laptop">
+    Start with a no-model native macOS demonstration. Then run Codex with your
+    subscription and compare pstack, Superpowers, or a Pocock recipe. Docker is
+    an explicit alternative backend.
+  </Card>
+  <Card title="Evidence you can inspect" icon="document">
+    Read the patch, failure, timing, and usage. Understand uncertainty before
+    declaring a winner.
+  </Card>
+</CardGrid>
+
+<div class="section-label">
+  <span>01</span> THE EXPERIMENT
+</div>
+
+## From a bug to a measured outcome
+
+<div class="pipeline">
+  <div>
+    <strong>01 / PREPARE</strong>Freeze the source
+  </div>
+  <div>
+    <strong>02 / QUALIFY</strong>Test the grader
+  </div>
+  <div>
+    <strong>03 / SOLVE</strong>Run one workflow
+  </div>
+  <div>
+    <strong>04 / GRADE</strong>Verify the patch
+  </div>
+  <div>
+    <strong>05 / COMPARE</strong>Read the evidence
+  </div>
+</div>
+
+<div class="method-note">
+  <span>PROCESS SIGNAL</span>
+  <p>A completed plan tells you how the agent worked.</p>
+  <span>OUTCOME EVIDENCE</span>
+  <p>A passing patch tells you whether the work solved the task.</p>
+</div>
+
+<div class="section-label">
+  <span>02</span> THE FIELD GUIDE
+</div>
+
+## Learn the method, then extend it
+
+<CardGrid>
+  <LinkCard
+    title="Why measure workflows?"
+    description="Separate a convincing process from a correct result."
+    href="/start/why/"
+  />
+  <LinkCard
+    title="Design a fair comparison"
+    description="Models, budgets, repeated runs, and held-out tasks."
+    href="/concepts/fair-comparisons/"
+  />
+  <LinkCard
+    title="Add a real open-source task"
+    description="Build a fixture with provenance and a trustworthy grader."
+    href="/guides/add-task/"
+  />
+  <LinkCard
+    title="Know the limits"
+    description="What a small pilot cannot establish."
+    href="/reference/limitations/"
+  />
+</CardGrid>

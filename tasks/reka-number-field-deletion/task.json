@@ -1,0 +1,49 @@
+{
+  "id": "reka-number-field-deletion",
+  "title": "A NumberField formatted with a unit suffix such as 13 min traps Backspace at the suffix",
+  "project": "Reka UI",
+  "provenance": "Historical regression replay from unovue/reka-ui PR #2851 (https://github.com/unovue/reka-ui/pull/2851). Accepted fix 35fd06884296e8fb12607c8eb6f4aecda60295bc. Shared earlier baseline 719d59af17978eb1e1fe547256501ac960e1a1a4; component source is unchanged between this baseline and the fix parent. MIT. Reference and regression patches are upstream-authored and independently executed here; not claimed to be independently authored.",
+  "source": {
+    "kind": "git",
+    "repository": "https://github.com/unovue/reka-ui.git",
+    "revision": "719d59af17978eb1e1fe547256501ac960e1a1a4"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.13.1",
+  "install": [
+    ["pnpm", "--filter", "./packages/core...", "install", "--frozen-lockfile"]
+  ],
+  "checks": [
+    {
+      "name": "NumberField regression and neighboring behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/NumberField/NumberField.test.ts"
+      ],
+      "regression": true
+    },
+    {
+      "name": "NumberField existing behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/NumberField/NumberField.test.ts",
+        "-t",
+        "should show units"
+      ],
+      "regression": false
+    }
+  ],
+  "expectedFailure": "should allow backspacing through the unit suffix[\\s\\S]*AssertionError",
+  "allowedPaths": ["packages/core/src/NumberField/NumberFieldInput.vue"],
+  "timeoutSeconds": 180
+}

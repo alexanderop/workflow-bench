@@ -1,0 +1,45 @@
+---
+title: 'Edit and contribute to the guide'
+description: 'Find the local source for a documentation page and verify a correction.'
+---
+
+import SourceLocation from '../../../components/SourceLocation.astro'
+
+The source is public at [alexanderop/workflow-bench](https://github.com/alexanderop/workflow-bench). Use the GitHub edit link at the bottom of a guide page, or use **Edit page locally** to locate its source file.
+
+## Edit the current page
+
+<SourceLocation />
+
+Open the source in your editor from the repository root. Markdown pages live under `apps/docs/src/content/docs/`. Shared diagrams live in `apps/docs/public/diagrams/`. The original generated illustrations and prompts remain in `apps/docs/src/assets/diagrams/`.
+
+```sh
+pnpm dev
+```
+
+Preview your change at the URL printed by Astro. Check the page in both themes and on a narrow viewport. Then run the repository checks:
+
+```sh
+pnpm verify
+```
+
+Do not include credentials or raw execution transcripts. Keep example data labeled as illustrative. A documentation edit must preserve model-call warnings and qualification requirements.
+
+## Deploy the guide
+
+[The public guide](https://alexanderop.github.io/workflow-bench/) is deployed by `.github/workflows/docs.yml`. Pull requests run `pnpm verify`; pushes to `main` and manual runs also upload `apps/docs/dist` and deploy it to GitHub Pages. Repository **Settings → Pages → Source** must be **GitHub Actions**.
+
+CI uses Node 24, the package manager version in `package.json`, and the frozen lockfile. It sets `DOCS_BASE=/workflow-bench/` for project-site navigation. Local development keeps `/` as its base. To reproduce the hosted build from the repository root:
+
+```sh
+DOCS_BASE=/workflow-bench/ BENCH_WORK=/tmp/workflow-bench-public-empty pnpm verify
+pnpm preview
+```
+
+Use an empty directory for `BENCH_WORK`; open `/workflow-bench/` on the preview server. CI uses a fresh temporary directory so local benchmark artifacts cannot enter the deployment. The written pilot reports remain in the guide, but the public interactive viewer has no private plan or attempt data. Run `pnpm dev` locally to inspect your own artifacts. CI makes no model calls and needs no Codex credentials.
+
+## Read with a coding agent
+
+Every guide page has **Copy page** and **View Markdown** actions. Both use the same generated Markdown, including task examples, warnings, diagram descriptions, and collapsed details. The [documentation index](/llms.txt) lists all exported pages. Interactive calculator controls are replaced by the formula and a link.
+
+Exports contain only documentation and the explicitly imported receipt teaching files. Private benchmark artifacts, raw transcripts, and credentials are not exported.

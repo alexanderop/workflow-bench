@@ -1,0 +1,66 @@
+---
+import { withBase } from '../lib/links'
+const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute
+---
+
+<div class="brand-group">
+  <a href={siteTitleHref} class="site-title">
+    <span class="mark" aria-hidden="true"></span>
+    <span translate="no">{siteTitle}</span>
+  </a>
+  <nav class="sl-hidden md:sl-flex print:hidden" aria-label="Primary">
+    <a href={withBase('/start/quickstart/')}>Docs</a>
+    <a href={withBase('/results/')}>Results</a>
+  </nav>
+</div>
+
+<style>
+  .brand-group,
+  .site-title,
+  nav {
+    display: flex;
+    align-items: center;
+  }
+  .brand-group {
+    gap: 1.1rem;
+    min-width: 0;
+  }
+  .site-title {
+    color: var(--sl-color-white);
+    font-size: 1rem;
+    font-weight: 650;
+    gap: 0.65rem;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .mark {
+    width: 0.65rem;
+    height: 0.65rem;
+    border: 2px solid var(--sl-color-accent);
+    border-radius: 50%;
+    box-shadow: 0.42rem 0 0 -0.12rem var(--sl-color-accent);
+  }
+  nav {
+    border-left: 1px solid var(--sl-color-gray-5);
+    gap: 0.15rem;
+    padding-left: 0.75rem;
+  }
+  nav a {
+    border: 1px solid transparent;
+    border-radius: 0.4rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.78rem;
+    padding: 0.45rem 0.6rem;
+    text-decoration: none;
+  }
+  nav a:hover {
+    border-color: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+  }
+  @media (max-width: 49.99rem) {
+    nav {
+      display: none;
+    }
+  }
+</style>

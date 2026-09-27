@@ -1,0 +1,49 @@
+{
+  "id": "reka-tooltip-coordination",
+  "title": "Close an already-open tooltip when another tooltip opens",
+  "project": "Reka UI",
+  "provenance": "Historical regression replay from unovue/reka-ui PR #2869 (https://github.com/unovue/reka-ui/pull/2869). Accepted fix b32f255e097d1181fff0a5b4d705e262f37646fa. Shared earlier baseline 719d59af17978eb1e1fe547256501ac960e1a1a4; component source is unchanged between this baseline and the fix parent. MIT. Reference and regression patches are upstream-authored and independently executed here; not claimed to be independently authored.",
+  "source": {
+    "kind": "git",
+    "repository": "https://github.com/unovue/reka-ui.git",
+    "revision": "719d59af17978eb1e1fe547256501ac960e1a1a4"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.13.1",
+  "install": [
+    ["pnpm", "--filter", "./packages/core...", "install", "--frozen-lockfile"]
+  ],
+  "checks": [
+    {
+      "name": "Tooltip regression and neighboring behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/Tooltip/Tooltip.test.ts"
+      ],
+      "regression": true
+    },
+    {
+      "name": "Tooltip existing behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/Tooltip/Tooltip.test.ts",
+        "-t",
+        "should open when focus"
+      ],
+      "regression": false
+    }
+  ],
+  "expectedFailure": "should close when another tooltip broadcasts that it opened[\\s\\S]*AssertionError",
+  "allowedPaths": ["packages/core/src/Tooltip/TooltipContentImpl.vue"],
+  "timeoutSeconds": 180
+}

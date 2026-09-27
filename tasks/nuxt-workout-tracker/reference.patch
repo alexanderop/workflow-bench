@@ -1,0 +1,98 @@
+diff --git a/app/app.vue b/app/app.vue
+--- a/app/app.vue
++++ b/app/app.vue
+@@ -1 +1,93 @@
+-<template><main><h1>Workout tracker</h1><p>Build your workout tracker here.</p></main></template>
++<script setup lang="ts">
++import Dexie, { type Table } from 'dexie'
++type Exercise = { name: string; sets: number | string; reps: number | string; weight: number | string }
++type Workout = { id: string; title: string; date: string; notes: string; exercises: Exercise[] }
++const workouts = ref<Workout[]>([])
++const draft = ref<Workout | null>(null)
++const error = ref('')
++const ready = ref(false)
++const busy = ref(false)
++let db: (Dexie & { workouts: Table<Workout, string> }) | undefined
++const row = (): Exercise => ({ name: '', sets: 1, reps: 1, weight: 0 })
++const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` }
++const sorted = computed(() => [...workouts.value].sort((a,b) => b.date.localeCompare(a.date)))
++const volume = (w: Workout) => w.exercises.reduce((sum,e) => sum + Number(e.sets)*Number(e.reps)*Number(e.weight),0).toLocaleString('en-US', { maximumFractionDigits: 2 })
++async function open() {
++  if (!db) { db = new Dexie('workout-tracker') as typeof db; db!.version(1).stores({ workouts: 'id,date' }) }
++  await db!.open()
++  return db!
++}
++onMounted(async () => {
++  try { workouts.value = await (await open()).workouts.toArray() }
++  catch { error.value = 'Unable to open local storage. Enable IndexedDB and reload to retry.' }
++  finally { ready.value = true }
++})
++onUnmounted(() => db?.close())
++function edit(w?: Workout) {
++  error.value = ''
++  draft.value = w ? JSON.parse(JSON.stringify(w)) : { id: crypto.randomUUID(), title:'', date:today(), notes:'', exercises:[row()] }
++}
++async function save() {
++  const w = draft.value
++  if (!w) return
++  const validNumber = (n: number | string) => n !== '' && Number.isFinite(Number(n))
++  if (!w.title.trim() || !w.date || !w.exercises.length || w.exercises.some(e => !e.name.trim() || !validNumber(e.sets) || !Number.isInteger(Number(e.sets)) || Number(e.sets)<=0 || !validNumber(e.reps) || !Number.isInteger(Number(e.reps)) || Number(e.reps)<=0 || !validNumber(e.weight) || Number(e.weight)<0)) {
++    error.value = 'Enter a title, date, and at least one named exercise with positive whole sets and reps and a nonnegative weight.'; return
++  }
++  busy.value = true
++  try {
++    const value: Workout = { ...w, title:w.title.trim(), exercises:w.exercises.map(e => ({ name:e.name.trim(), sets:Number(e.sets), reps:Number(e.reps), weight:Number(e.weight) })) }
++    await (await open()).workouts.put(value)
++    workouts.value = [...workouts.value.filter(item => item.id !== value.id),value]
++    draft.value = null; error.value = ''
++  } catch { error.value = 'Unable to save locally. Check browser storage permissions and try Save workout again.' }
++  finally { busy.value = false }
++}
++async function remove(w: Workout) {
++  if (!confirm(`Delete ${w.title}?`)) return
++  try { await (await open()).workouts.delete(w.id); workouts.value = workouts.value.filter(item => item.id !== w.id); error.value = '' }
++  catch { error.value = 'Unable to delete locally. Check browser storage permissions and retry.' }
++}
++</script>
++<template>
++  <main>
++    <header><p>YOUR PERSONAL TRAINING LOG</p><h1>Workout tracker</h1><p>Track your progress. Your data stays in this browser.</p></header>
++    <p v-if="error" role="alert">{{ error }}</p>
++    <p v-if="!ready" role="status">Loading workouts…</p>
++    <template v-else>
++      <form v-if="draft" aria-label="Workout editor" novalidate @submit.prevent="save">
++        <h2>Workout details</h2>
++        <label>Workout title<input v-model="draft.title" /></label>
++        <label>Workout date<input v-model="draft.date" type="date" /></label>
++        <label>Notes<textarea v-model="draft.notes" /></label>
++        <fieldset v-for="(exercise,index) in draft.exercises" :key="index">
++          <legend>Exercise {{ index + 1 }}</legend>
++          <label>Exercise name<input v-model="exercise.name" /></label>
++          <div class="numbers">
++            <label>Sets<input v-model="exercise.sets" type="number" min="1" step="1" /></label>
++            <label>Reps<input v-model="exercise.reps" type="number" min="1" step="1" /></label>
++            <label>Weight (kg)<input v-model="exercise.weight" type="number" min="0" step="any" /></label>
++          </div>
++          <button type="button" @click="draft.exercises.splice(index,1)">Remove exercise</button>
++        </fieldset>
++        <button type="button" @click="draft.exercises.push(row())">Add exercise</button>
++        <div class="actions"><button type="submit" :disabled="busy">Save workout</button><button type="button" :disabled="busy" @click="draft=null; error=''">Cancel</button></div>
++      </form>
++      <template v-else>
++        <button @click="edit()">New workout</button>
++        <section aria-label="Workout history">
++          <h2>Workout history</h2><p v-if="!workouts.length">No workouts yet. Start with your first session.</p>
++          <article v-for="w in sorted" :key="w.id">
++            <h3>{{ w.title }}</h3><time :datetime="w.date">{{ w.date }}</time><p v-if="w.notes">{{ w.notes }}</p>
++            <ul><li v-for="(e,i) in w.exercises" :key="i">{{ e.name }}: {{ e.sets }} × {{ e.reps }} × {{ e.weight }} kg</li></ul>
++            <p>Total volume: {{ volume(w) }} kg</p>
++            <div class="actions"><button @click="edit(w)">Edit workout</button><button @click="remove(w)">Delete workout</button></div>
++          </article>
++        </section>
++      </template>
++    </template>
++  </main>
++</template>
++<style>
++* { box-sizing:border-box } body { margin:0; background:#f3f5f1; color:#192d24; font:17px/1.5 system-ui,sans-serif } main { max-width:760px; margin:auto; padding:24px 16px 64px } header { margin-bottom:32px } h1 { font-size:2.4rem; line-height:1.1 } header>p:first-child { font-size:.75rem; letter-spacing:.12em } form,article { background:white; border:1px solid #c4d0c7; border-radius:12px; padding:20px; margin:20px 0 } label { display:block; margin:12px 0 } input,textarea { display:block; width:100%; padding:10px; border:1px solid #65776a; border-radius:5px; font:inherit; color:inherit } fieldset { min-width:0; margin:20px 0; border:1px solid #c4d0c7; border-radius:8px } button { font:inherit; padding:10px 14px; border:1px solid #28513b; border-radius:6px; background:#28513b; color:white; cursor:pointer } button:disabled { opacity:.6 } :focus-visible { outline:3px solid #bb6500; outline-offset:3px } .numbers { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px } .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px } [role=alert] { color:#8a2020; background:#fff0ec; padding:16px; border:1px solid #8a2020 } article { overflow-wrap:anywhere }
++</style>

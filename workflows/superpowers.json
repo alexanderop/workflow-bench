@@ -1,0 +1,10 @@
+{
+  "id": "superpowers",
+  "title": "Superpowers debugging",
+  "repository": "https://github.com/obra/superpowers.git",
+  "revision": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+  "installation": "plugin",
+  "entrypoint": "$superpowers:using-superpowers\nUse the systematic-debugging workflow to investigate and fix this task.",
+  "evidencePath": "systematic-debugging/SKILL.md",
+  "description": "Pinned Codex plugin, explicitly invoked debugging recipe in autonomous mode."
+}

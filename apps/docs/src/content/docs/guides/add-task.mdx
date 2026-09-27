@@ -1,0 +1,72 @@
+---
+title: 'Add an open-source task'
+description: 'Add an open-source task in Workflow Bench.'
+---
+
+import ReceiptExample from '../../../components/ReceiptExample.astro'
+
+Add a task when you can freeze a broken revision, state the required behavior, and grade a candidate patch without network access. Use `tasks/vueuse-element-size` as the complete upstream-replay example.
+
+## Inspect a complete teaching task
+
+These tabs read the actual files in `tasks/receipt-rounding/` at build time. The first file defines the environment and allowed patch paths. The prompt is solver-visible. The grader stays outside the solver workspace and checks the production patch independently.
+
+<ReceiptExample />
+
+This authored teaching fixture is small enough to read in full. It demonstrates task plumbing and does not measure general workflow quality. The runnable directory also contains `source/` and `reference.patch`. Run `pnpm bench demo` from the repository root to prepare and qualify it.
+
+## Select a reproducible problem
+
+Prefer a bounded bug with pre-fix requirements and an accepted implementation. VueUse lifecycle/measurement bugs and npmx URL-state behavior are useful candidates. Pin the actual pre-fix revision and preserve upstream licensing.
+
+For example, the npmx task replays only the URL helper portion of [changelog providers](https://github.com/npmx-dev/npmx.dev/pull/3221). It does not claim to test the whole application integration. [URL filters and columns](https://github.com/npmx-dev/npmx.dev/pull/3257) remains a broader browser candidate that needs packaging and qualification.
+
+## Create the task directory
+
+```text
+tasks/my-task/
+  task.json
+  PROMPT.md
+  reference.patch
+  tests.patch           # optional patch with trusted tests
+  grader/               # optional external check programs
+  PROVENANCE.md
+  LICENSE
+```
+
+Copy the shape of `tasks/vueuse-element-size/task.json`. Set source URL/revision, Node image, pnpm version, dependency-install commands, named check commands, the expected regression signature, and exact allowed production paths. Commands are argument arrays, not arbitrary concatenated shell strings.
+
+A local teaching fixture uses `{ "kind": "local", "path": "source" }`; a replay task uses `{ "kind": "git", "repository": "...", "revision": "40-character SHA" }`.
+
+## Keep the prompt honest
+
+Describe the broken behavior and required user-visible result. Do not include the accepted solution, PR diff, hidden assertion, or future commit. Solver repositories have fresh history and no upstream remote.
+
+For browser tasks, add deterministic mock responses during preparation. A grader runs offline. Do not depend on live registry responses, production secrets, or an externally running service.
+
+## Choose an acceptance boundary
+
+Allowed paths constrain the exported patch. This release accepts source-only text patches and rejects changes to tests, configuration, dependency manifests, symlinks, file modes, and renames. Tasks requiring those changes need a future explicit policy extension, not a relaxed global check.
+
+Use behavior-based assertions. Include normal cases and edge cases, and test a deliberately incomplete patch. Run `prepare`, `qualify`, and a pilot before adding the task ID to a suite.
+
+```sh
+pnpm bench prepare --task my-task
+pnpm bench qualify --task my-task
+pnpm bench plan --task my-task --experiments plain-sol,pstack-sol --repetitions 1
+```
+
+`qualify` must show that the broken base fails the intended requirement and that the trusted reference passes. A green reference alone does not qualify the task.
+
+## Avoid training leakage claims
+
+Historical public fixes can be memorized. Recent publication does not prove absence from training. Keep historical replay separate from newly authored private holdouts, and never infer human-only authorship from maintainer acceptance.
+
+<details>
+<summary id="fixed-starter-application-tasks">Fixed-starter application tasks</summary>
+
+The [Nuxt workout tracker comparison](/guides/workout-benchmark/) demonstrates an authored new-application task within the source-only patch policy. Freeze the toolchain in a blank starter, place all candidate product code in allowed source paths, require the base to build but fail behavioral requirements, and qualify a complete reference plus incomplete mutations. Do not describe this as empty-directory scaffolding.
+
+</details>
+
+After qualification, [define a workflow comparison](/guides/workflows/) or review the [task and result limits](/reference/limitations/).

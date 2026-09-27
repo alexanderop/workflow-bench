@@ -1,0 +1,10 @@
+{
+  "id": "pstack",
+  "title": "Pstack poteto mode",
+  "repository": "https://github.com/alexanderop/pstack.git",
+  "revision": "e9b6d5d29c06e11e2b2af67c80cef8c38712a02e",
+  "installation": "plugin",
+  "entrypoint": "$pstack:poteto-mode",
+  "evidencePath": "poteto-mode/SKILL.md",
+  "description": "Full pinned plugin; poteto-mode explicitly invoked; all role models use the experiment model."
+}

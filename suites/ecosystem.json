@@ -1,0 +1,5 @@
+{
+  "tasks": ["vueuse-element-size", "npmx-changelog-urls"],
+  "experiments": ["plain-sol", "pstack-sol", "superpowers-sol", "pocock-sol"],
+  "repetitions": 3
+}

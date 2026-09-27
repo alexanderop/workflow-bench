@@ -1,0 +1,50 @@
+---
+title: 'How a run works'
+description: 'Follow a candidate patch from a qualified baseline to an independent grade.'
+---
+
+A run lets Codex edit a task in one fresh workspace, then checks the exported patch in another. Both workspaces start from the same prepared environment identity, but only the grader receives the trusted tests. The default local backend uses native macOS processes. The optional Docker backend uses containers.
+
+For the teaching-only receipt fixture, the solver sees the rounding requirement and the broken implementation. It can write its own tests while it works. After the solve, the grader applies the exported production patch to a fresh baseline and checks the receipt behavior independently.
+
+## Follow one candidate patch
+
+The pipeline establishes the task before it measures a solver attempt.
+
+1. **Prepare.** Fetch the exact baseline revision, remove upstream history, and install dependencies without inference credentials. The local backend stores a prepared dependency cache. The Docker backend builds an image.
+2. **Qualify.** Run the hidden tests on the broken base and trusted reference in separate fresh workspaces. Stop if the intended failure is absent or the reference fails.
+3. **Plan.** Freeze task and workflow fingerprints, the backend environment identity, model, effort, thread limits, timeout, repetition, and execution order.
+4. **Solve.** Clone the prepared state into a new attempt workspace and install one workflow. Run Codex and export a diff relative to the original snapshot, including changes the agent committed.
+5. **Grade.** Apply the candidate to another fresh workspace. Inject trusted tests only into this workspace. Run without inference credentials or solver configuration.
+6. **Report.** Keep every planned cell visible. Show acceptance results separately from diagnostic evidence.
+
+[Qualification](/concepts/qualification/) establishes whether the grader can distinguish the broken base from a trusted fix. The plan then records which conditions each attempt must use.
+
+## Why separate workspaces?
+
+The solver can edit its working directory and author tests. Those tests help the agent develop a fix, but the agent also controls their assertions. Independent grading uses the frozen baseline, the exported production patch, and trusted assertions outside the solver workspace.
+
+For `receipt-rounding`, the grader checks that two half-cent discounted lines total two cents. Passing a solver-authored test that expects one cent would not satisfy that check.
+
+The runner does not copy the reference patch or hidden tests into the solver workspace. The grader does not receive the solver's credentials or configuration. This separation makes the candidate patch the handoff between development and evaluation.
+
+## What is frozen?
+
+The task fingerprint includes its source description, prompt, patches, grader, runner implementation, and lockfile. Version 2 artifacts retain the environment identity and workflow content hash. A local identity records macOS, architecture, OS release, Node, pnpm, Codex, the prepared snapshot hash, and the sandbox policy version. A Docker identity records the immutable image ID. Changing an input requires preparation and qualification again. Old plans remain available for inspection.
+
+<details>
+<summary>Reproduce a Docker image across machines</summary>
+
+Preparation uses readable base-image tags and records the resulting image ID. A later rebuild can produce a different image even when the tag is unchanged. To distribute the same environment across machines, export the qualified image or change the task to use a base-image digest.
+
+</details>
+
+These records make [paired comparisons](/concepts/fair-comparisons/) possible. Two attempts with different task fingerprints or environment identities do not form a controlled pair. Version 1 plans and results remain readable as Docker artifacts.
+
+## What survives a run?
+
+The plan, result, candidate patch, checks, timing, root usage, observed child usage, and private execution evidence remain under `.bench`. Missing child usage remains unknown.
+
+The runner's cleanup path removes temporary local workspaces or Docker containers and networks. A forcibly killed host process can leave resources behind. The [troubleshooting guide](/guides/troubleshooting/) covers cleanup and failed runs.
+
+Once the artifacts exist, [interpret the report](/concepts/interpretation/) by checking coverage before completion rates.

@@ -1,0 +1,62 @@
+---
+title: 'Qualify the measuring instrument'
+description: 'Establish that the grader rejects the broken base and accepts a trusted reference.'
+---
+
+import Diagram from '../../../components/Diagram.astro'
+
+Qualification checks the grader before an agent attempts the task. The broken baseline must fail for the expected reason, and the trusted reference patch must pass every check.
+
+<Diagram
+  src="/diagrams/qualification.svg"
+  alt="The broken base must fail the intended regression, the trusted reference must pass all checks, and an additional mutation check should reject an incomplete fix."
+  caption="Qualification requires the first two checks. The separate mutation proof tests a plausible incomplete fix. These are expected conditions, not measured workflow results."
+/>
+
+In the teaching-only receipt fixture, the baseline returns one cent for two half-cent discounted lines. The regression check expects two cents and fails with `LINE_ROUNDING_REGRESSION`. The reference rounds each line before summing, so the same check passes.
+
+```sh
+pnpm bench qualify --task receipt-rounding
+```
+
+This command uses the default local backend on macOS. Add `--backend docker` to qualify the prepared Docker environment instead. Qualification evidence belongs to one environment identity and cannot qualify the other backend.
+
+A failing process alone is not enough. A missing browser, broken install, or malformed command says nothing about whether the grader detects the task's bug.
+
+Qualification requires all of these conditions:
+
+- A regression check fails on the baseline with the expected assertion signature.
+- Unrelated existing checks pass on the baseline.
+- Every check passes with the trusted reference patch.
+- No check times out.
+
+Together, these checks establish that the failure belongs to the intended regression and that a known fix can satisfy the suite.
+
+## Reject plausible incomplete fixes
+
+A passing reference shows one implementation the grader accepts. A deliberately incorrect variation checks whether the grader also rejects a plausible mistake.
+
+The local and Docker proofs change the receipt reference to round down instead of rounding half cents up. That implementation rounds each line in the right place but uses the wrong rounding rule. The independent grader must reject it.
+
+```sh
+pnpm test:local
+pnpm test:docker
+```
+
+The local proof checks fresh native workspaces, hidden-grader separation, and fail-closed named Codex permissions plus the macOS sandbox policy. The Docker proof checks that a fresh task container lacks an auth file, hidden grader, and host Docker socket. Neither proof makes model calls. Qualification and backend proofs establish the evaluation setup, not a workflow's coding performance.
+
+## Behavioral checks beat source patterns
+
+The receipt requirement concerns the returned total, not the helper name or shape of the loop. The same principle applies to the VueUse task, where the grader measures actual dimensions and callback counts in Chromium.
+
+A source-pattern check can reject a correct alternative or accept code that resembles the reference but behaves incorrectly. Behavioral checks leave room for different implementations of the same requirement.
+
+The trusted reference is still a candidate answer. Qualification tests the behaviors the suite covers. It does not prove that the reference has no other bugs, and a rejected mutation does not prove that the grader catches every incomplete fix.
+
+## Preserve evidence
+
+The current qualification record is `.bench/tasks/TASK/BACKEND/qualification.json`. Timestamped qualification directories under the same backend retain historical records, including failures.
+
+If qualification fails, fix the infrastructure or improve the task, then qualify again before planning. Keep the failed record so that a reviewer can distinguish a changed task from a changed result.
+
+[How a run works](/concepts/how-it-works/) shows where qualification fits. [Add a task](/guides/add-task/) explains how to define a baseline, reference, and grader for another bug.

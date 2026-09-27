@@ -1,0 +1,10 @@
+{
+  "tasks": [
+    "nuxt-workout-tracker"
+  ],
+  "experiments": [
+    "plain-workout-pilot",
+    "pstack-workout-pilot"
+  ],
+  "repetitions": 1
+}

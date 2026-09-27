@@ -1,0 +1,62 @@
+---
+import Results from '../components/Results.vue'
+import { dashboard } from '../lib/dashboard'
+import ThemeProvider from '@astrojs/starlight/components/ThemeProvider.astro'
+import '../styles/theme.css'
+const data = await dashboard()
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <ThemeProvider />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Inspect independently verified agent workflow experiments, with complete coverage and visible uncertainty."
+    />
+    <title>Results · Workflow Bench</title>
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Skip to results
+    </a>
+    <Results data={data} client:load />
+  </body>
+</html>
+<style is:global>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--wb-bg);
+    color: var(--sl-color-white);
+    font-family: Geist, Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 3px solid var(--sl-color-accent);
+    outline-offset: 4px;
+  }
+  .skip {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    padding: 1rem;
+    background: var(--wb-orange);
+    color: #111;
+    z-index: 10;
+  }
+  .skip:focus {
+    top: 1rem;
+  }
+</style>

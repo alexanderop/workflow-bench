@@ -1,0 +1,87 @@
+---
+import { withBase } from '../lib/links'
+import DefaultPageTitle from '@astrojs/starlight/components/PageTitle.astro'
+const { id } = Astro.locals.starlightRoute
+const slug = id === '' ? 'index' : id.replace(/\/$/, '')
+const markdownHref = withBase(`/markdown/${slug}.md`)
+---
+
+<DefaultPageTitle />
+<page-actions class="page-actions">
+  <button type="button" data-markdown={markdownHref}>
+    Copy page
+  </button>
+  <a href={markdownHref}>View Markdown</a>
+  <a href={withBase('/llms.txt')}>llms.txt</a>
+  <a
+    href={withBase(`/reference/contributing/?page=${encodeURIComponent(slug)}`)}
+  >
+    Edit page locally
+  </a>
+  <span role="status" aria-live="polite"></span>
+</page-actions>
+
+<script>
+  class PageActions extends HTMLElement {
+    connectedCallback() {
+      const button = this.querySelector('button')
+      const status = this.querySelector('[role="status"]')
+      button?.addEventListener('click', async () => {
+        if (!status) return
+        button.disabled = true
+        status.textContent = 'Copying…'
+        try {
+          const response = await fetch(button.dataset.markdown ?? '')
+          if (!response.ok) throw new Error('Markdown could not be loaded')
+          const markdown = await response.text()
+          await navigator.clipboard.writeText(markdown)
+          status.textContent = 'Page copied.'
+        } catch {
+          status.textContent =
+            'Copy unavailable. Open View Markdown to select and copy the page.'
+        } finally {
+          button.disabled = false
+        }
+      })
+    }
+  }
+  if (!customElements.get('page-actions'))
+    customElements.define('page-actions', PageActions)
+</script>
+
+<style>
+  .page-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.78rem;
+  }
+  .page-actions a {
+    color: var(--sl-color-gray-2);
+    text-underline-offset: 0.2em;
+  }
+  button {
+    font: inherit;
+    color: var(--sl-color-white);
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0.35rem;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+  }
+  button:hover {
+    border-color: var(--sl-color-accent);
+  }
+  button:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 3px;
+  }
+  [role='status'] {
+    color: var(--sl-color-gray-2);
+  }
+  [role='status']:empty {
+    display: none;
+  }
+</style>

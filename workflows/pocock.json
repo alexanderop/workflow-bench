@@ -1,0 +1,10 @@
+{
+  "id": "pocock",
+  "title": "Pocock diagnosing bugs",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "revision": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+  "installation": "skills",
+  "entrypoint": "$diagnosing-bugs\nDiagnose and implement the fix; use $tdd for verification.",
+  "evidencePath": "diagnosing-bugs/SKILL.md",
+  "description": "Pinned engineering skill collection; diagnosing-bugs plus TDD recipe, not every possible Pocock workflow."
+}

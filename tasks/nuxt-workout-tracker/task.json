@@ -1,0 +1,50 @@
+{
+  "id": "nuxt-workout-tracker",
+  "title": "Build a local-first Nuxt workout tracker from detailed requirements",
+  "project": "Authored greenfield application fixture",
+  "provenance": "Authored for Workflow Bench under the repository MIT license. Blank fixed-toolchain starter; not an upstream bug replay or measured workflow result.",
+  "source": {
+    "kind": "local",
+    "path": "source"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.28.2",
+  "install": [
+    [
+      "pnpm",
+      "install",
+      "--frozen-lockfile"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "playwright",
+      "install",
+      "--with-deps",
+      "chromium"
+    ]
+  ],
+  "checks": [
+    {
+      "name": "Production Nuxt build",
+      "command": [
+        "pnpm",
+        "build"
+      ],
+      "regression": false
+    },
+    {
+      "name": "Workout requirements browser journeys",
+      "command": [
+        "node",
+        "/tmp/grader/journeys.mjs"
+      ],
+      "regression": true
+    }
+  ],
+  "expectedFailure": "WORKOUT_REQUIREMENTS_FAILED|WORKOUT_NOT_ASSESSED",
+  "allowedPaths": [
+    "app"
+  ],
+  "timeoutSeconds": 180
+}

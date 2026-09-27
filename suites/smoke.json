@@ -1,0 +1,5 @@
+{
+  "tasks": ["receipt-rounding"],
+  "experiments": ["plain-sol", "pstack-sol"],
+  "repetitions": 1
+}

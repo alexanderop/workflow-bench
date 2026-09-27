@@ -1,0 +1,13 @@
+diff --git a/packages/core/src/Tooltip/TooltipContentImpl.vue b/packages/core/src/Tooltip/TooltipContentImpl.vue
+index 8ef6cb6..d6a1bff 100644
+--- a/packages/core/src/Tooltip/TooltipContentImpl.vue
++++ b/packages/core/src/Tooltip/TooltipContentImpl.vue
+@@ -87,7 +87,7 @@ onMounted(() => {
+       rootContext.onClose()
+   }, { capture: true })
+   // Close this tooltip if another one opens
+-  useEventListener(window, TOOLTIP_OPEN, rootContext.onClose)
++  useEventListener(document, TOOLTIP_OPEN, rootContext.onClose)
+ })
+ </script>
+ 

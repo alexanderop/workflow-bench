@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+.bench
+node_modules
+dist
+.astro
+artifacts
+tasks/**/source
+tasks/**/*.patch

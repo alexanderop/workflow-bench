@@ -1,0 +1,50 @@
+{
+  "id": "vueuse-element-size",
+  "title": "Report element size for the requested box model",
+  "project": "VueUse",
+  "provenance": "VueUse issue #5347 and accepted PR #5524. MIT. Fixture patches imported from the local vue-agent-bench task with upstream attribution; independently requalify here.",
+  "source": {
+    "kind": "git",
+    "repository": "https://github.com/vueuse/vueuse.git",
+    "revision": "88dd7b2fb7ad1d61f565c6ce3ecba2a36471d026"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.33.2",
+  "install": [
+    ["pnpm", "install", "--frozen-lockfile"],
+    ["pnpm", "exec", "playwright", "install", "--with-deps", "chromium"]
+  ],
+  "checks": [
+    {
+      "name": "useElementSize browser regression",
+      "command": [
+        "pnpm",
+        "vitest",
+        "run",
+        "--project",
+        "browser (chromium)",
+        "packages/core/useElementSize/directive.browser.test.ts",
+        "packages/core/useElementSize/index.browser.test.ts"
+      ],
+      "regression": true
+    },
+    {
+      "name": "useElementSize existing directive behavior",
+      "command": [
+        "pnpm",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/core/useElementSize/directive.test.ts"
+      ],
+      "regression": false
+    }
+  ],
+  "expectedFailure": "expected \"vi\\.fn\\(\\)\" to be called 1 times, but got 0 times|expected 200 to be 170",
+  "allowedPaths": [
+    "packages/core/useElementSize/index.ts",
+    "packages/core/useElementSize/directive.ts"
+  ],
+  "timeoutSeconds": 180
+}

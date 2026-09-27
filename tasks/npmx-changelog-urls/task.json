@@ -1,0 +1,39 @@
+{
+  "id": "npmx-changelog-urls",
+  "title": "Generate changelog file URLs for additional Git providers",
+  "project": "npmx",
+  "provenance": "Bounded helper replay from npmx-dev/npmx.dev PR #3221. Baseline e8296eb9377bfd04eab2b8f8924ff9e3f611cde6; accepted fix 9610863993f23f2cbab8b24351585ed85084fb1c. Tests are independently authored for the provider URL helper only.",
+  "source": {
+    "kind": "git",
+    "repository": "https://github.com/npmx-dev/npmx.dev.git",
+    "revision": "e8296eb9377bfd04eab2b8f8924ff9e3f611cde6"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.28.2",
+  "install": [],
+  "checks": [
+    {
+      "name": "Additional provider URLs",
+      "command": [
+        "node",
+        "--experimental-strip-types",
+        "--test",
+        "/tmp/grader/providers.test.mjs"
+      ],
+      "regression": true
+    },
+    {
+      "name": "Existing provider URLs",
+      "command": [
+        "node",
+        "--experimental-strip-types",
+        "--test",
+        "/tmp/grader/existing.test.mjs"
+      ],
+      "regression": false
+    }
+  ],
+  "expectedFailure": "PROVIDER_URL_REGRESSION",
+  "allowedPaths": ["server/utils/changelog/baseFileUrl.ts"],
+  "timeoutSeconds": 30
+}

@@ -1,0 +1,49 @@
+{
+  "id": "reka-radio-accessible-name",
+  "title": "A RadioGroupItem with an id but no matching external label exposes its internal value (for example event_type) as aria-label",
+  "project": "Reka UI",
+  "provenance": "Historical regression replay from unovue/reka-ui PR #2861 (https://github.com/unovue/reka-ui/pull/2861). Accepted fix 3efdb080a9dae9ba13a03f625096b393f20e3359. Shared earlier baseline 719d59af17978eb1e1fe547256501ac960e1a1a4; component source is unchanged between this baseline and the fix parent. MIT. Reference and regression patches are upstream-authored and independently executed here; not claimed to be independently authored.",
+  "source": {
+    "kind": "git",
+    "repository": "https://github.com/unovue/reka-ui.git",
+    "revision": "719d59af17978eb1e1fe547256501ac960e1a1a4"
+  },
+  "nodeImage": "node:22-bookworm",
+  "pnpmVersion": "10.13.1",
+  "install": [
+    ["pnpm", "--filter", "./packages/core...", "install", "--frozen-lockfile"]
+  ],
+  "checks": [
+    {
+      "name": "RadioGroup regression and neighboring behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/RadioGroup/RadioGroup.test.ts"
+      ],
+      "regression": true
+    },
+    {
+      "name": "RadioGroup existing behavior",
+      "command": [
+        "pnpm",
+        "--dir",
+        "packages/core",
+        "exec",
+        "vitest",
+        "run",
+        "src/RadioGroup/RadioGroup.test.ts",
+        "-t",
+        "should pass axe accessibility tests"
+      ],
+      "regression": false
+    }
+  ],
+  "expectedFailure": "should not fall back to the value as the accessible name[\\s\\S]*AssertionError",
+  "allowedPaths": ["packages/core/src/RadioGroup/Radio.vue"],
+  "timeoutSeconds": 180
+}

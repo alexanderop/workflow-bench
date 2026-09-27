@@ -1,0 +1,57 @@
+---
+import { withBase } from '../lib/links'
+import { markdownPages } from '../lib/docs-export'
+const pages = await markdownPages()
+---
+
+<p id="source-location">
+  Choose <strong>Edit page locally</strong> on any guide page to find its source
+  file here.
+</p>
+<ul class="source-directory">
+  {pages.map((page) => (
+    <li data-page={page.id}>
+      <a
+        href={withBase(
+          page.id === 'index'
+            ? '/'
+            : page.id === '404'
+              ? '/404.html'
+              : `/${page.id}/`,
+        )}
+      >
+        {page.title}
+      </a>
+      <br />
+      <code>{page.sourcePath}</code>
+    </li>
+  ))}
+</ul>
+<script>
+  const selected = new URLSearchParams(location.search).get('page')
+  const match = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-page]'),
+  ).find((item) => item.dataset.page === selected)
+  const label = document.getElementById('source-location')
+  if (match && label) {
+    const source = match.querySelector('code')?.textContent
+    if (source)
+      label.textContent = `Edit this file from the repository root: ${source}`
+    match.setAttribute('aria-current', 'true')
+  }
+</script>
+<style>
+  .source-directory {
+    padding-left: 1.2rem;
+  }
+  li {
+    margin-block: 0.9rem;
+  }
+  code {
+    overflow-wrap: anywhere;
+  }
+  [aria-current] {
+    border-left: 3px solid var(--sl-color-accent);
+    padding-left: 0.75rem;
+  }
+</style>

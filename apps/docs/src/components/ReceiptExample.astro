@@ -1,0 +1,12 @@
+---
+import { Code, Tabs, TabItem } from '@astrojs/starlight/components'
+import { receiptFiles } from '../lib/receipt-example'
+---
+
+<Tabs>
+  {receiptFiles.map((file) => (
+    <TabItem label={file.name}>
+      <Code code={file.code} lang={file.language} title={file.name} />
+    </TabItem>
+  ))}
+</Tabs>

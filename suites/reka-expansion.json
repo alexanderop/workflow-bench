@@ -1,0 +1,10 @@
+{
+  "tasks": [
+    "reka-tooltip-coordination",
+    "reka-dismissable-touch",
+    "reka-radio-accessible-name",
+    "reka-number-field-deletion"
+  ],
+  "experiments": ["plain-sol", "pstack-sol"],
+  "repetitions": 3
+}

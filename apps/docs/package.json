@@ -1,0 +1,24 @@
+{
+  "name": "@workflow-bench/docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "check": "astro check && vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.1",
+    "@astrojs/starlight": "^0.42.4",
+    "@astrojs/vue": "^7.0.3",
+    "@lucide/vue": "^1.47.0",
+    "astro": "^7.3.5",
+    "sharp": "^0.35.4",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.3.11"
+  }
+}

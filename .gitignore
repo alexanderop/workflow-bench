@@ -1,0 +1,9 @@
+node_modules/
+.bench/
+dist/
+.astro/
+.env*
+!.env.example
+auth.json
+*.log
+artifacts/

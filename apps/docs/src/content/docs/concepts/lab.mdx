@@ -1,0 +1,20 @@
+---
+title: Experiment calculator
+description: Explore the size of a repeated workflow comparison before running it.
+---
+
+import Lab from '../../../components/Lab.vue'
+
+Use the calculator to check the size of a comparison before you create a plan. Set the number of tasks, workflows, and repetitions. The total is the number of solver attempts that the matrix requires.
+
+<Lab client:load />
+
+The calculator performs arithmetic only. It does not predict accuracy, subscription usage, cost, or a winner. The runner's `plan` command records the actual matrix before any model calls. Confirm that its cell count matches the design above.
+
+## Start with a pilot
+
+Use a small pilot to find installation problems, broken graders, and unsuitable time limits. Then freeze the configuration and select a broader held-out corpus.
+
+More repetitions reduce some run-to-run noise. More independent tasks address variation between problems. A sound comparison needs both.
+
+Continue with [fair comparisons](/concepts/fair-comparisons/) to choose controls and a decision rule. Use [the live comparison guide](/guides/live-comparison/) to create and run a plan.
